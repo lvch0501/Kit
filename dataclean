@@ -1,0 +1,195 @@
+import re
+import operator
+import copy
+f = open('MiningResult.txt', 'r')
+i = f.readline()
+text = []
+alltxt = []
+while True:
+    i = f.readline()
+    if i == '':
+        break
+    pattern = re.compile(r'-?[1-9]\d*')
+    i2 = re.findall(pattern, i)
+    if i2.__len__() == 9:
+        nodes = []
+        lenghs = []
+        labels = []
+        for i in range(2):
+            nodes.append(i2[i])
+        for i in range(3):
+            lenghs.append(i2[i+2])
+        for i in range(4):
+            labels.append(i2[i+5])
+        dic = {"nodes": nodes, "length": lenghs, "labels": labels, "flag": True}
+        alltxt.append(dic)
+    elif i2.__len__() == 15:
+        nodes = []
+        lenghs = []
+        labels = []
+        for i in range(3):
+            nodes.append(i2[i])
+        for i in range(6):
+            lenghs.append(i2[i + 3])
+        for i in range(6):
+            labels.append(i2[i + 9])
+        dic = {"nodes": nodes, "length": lenghs, "labels": labels, "flag": True}
+        alltxt.append(dic)
+    elif i2.__len__() == 21:
+        nodes = []
+        lenghs = []
+        labels = []
+        for i in range(4):
+            nodes.append(i2[i])
+        for i in range(9):
+            lenghs.append(i2[i + 4])
+        for i in range(8):
+            labels.append(i2[i + 13])
+        dic = {"nodes": nodes, "length": lenghs, "labels": labels, "flag": True}
+        alltxt.append(dic)
+cleantxt = copy.deepcopy(alltxt)
+for i in range(19):
+    for j in range(len(cleantxt[i]["length"])):
+        for k in range(3):
+            if cleantxt[i]["length"][j] == cleantxt[i]["labels"][k]:
+                cleantxt[i]["length"][j] = cleantxt[i]["labels"][k+1]
+                #print(cleantxt[i]["length"][j])
+                break
+                #print(j, "=", cleantxt[i]["labels"][k+1])
+for i in range(19):
+    for j in range(19):
+        if i!=j and operator.eq(cleantxt[i]["length"],cleantxt[j]["length"]) and i<j:
+            alltxt[j]["flag"] = False
+for i in cleantxt:
+    if len(i["nodes"]) == 3:
+        p = cleantxt.index(i)
+        break
+for i in cleantxt:
+    if len(i["nodes"]) == 4:
+        q = cleantxt.index(i)
+        break
+for i in range(p, q):
+    for j in range(len(cleantxt[i]["length"])):
+        for k in range(5):
+            if cleantxt[i]["length"][j] == cleantxt[i]["labels"][k]:
+                cleantxt[i]["length"][j] = cleantxt[i]["labels"][k+1]
+                break
+for i in range(p, q):
+    for j in range(p, q):
+        itemp1 = []
+        itemp2 = []
+        jtemp1 = []
+        jtemp2 = []
+        itemp1.append(cleantxt[i]["length"][0])
+        itemp1.append(cleantxt[i]["length"][1])
+        itemp1.append(cleantxt[i]["length"][2])
+        itemp2.append(cleantxt[i]["length"][3])
+        itemp2.append(cleantxt[i]["length"][4])
+        itemp2.append(cleantxt[i]["length"][5])
+        jtemp1.append(cleantxt[j]["length"][0])
+        jtemp1.append(cleantxt[j]["length"][1])
+        jtemp1.append(cleantxt[j]["length"][2])
+        jtemp2.append(cleantxt[j]["length"][3])
+        jtemp2.append(cleantxt[j]["length"][4])
+        jtemp2.append(cleantxt[j]["length"][5])
+        if i < j and (operator.eq(itemp1, jtemp1) and operator.eq(itemp2, jtemp2)):
+            #print(i, j)
+            alltxt[j]["flag"] = False
+        elif i < j and (operator.eq(itemp1, jtemp2) and operator.eq(itemp2, jtemp1)):
+            #print(i, j)
+            alltxt[j]["flag"] = False
+
+for i in cleantxt:
+    if len(i["nodes"]) == 4:
+        p = cleantxt.index(i)
+        break
+q = len(cleantxt)
+for i in range(p, q):
+    for j in range(len(cleantxt[i]["length"])):
+        for k in range(7):
+            if cleantxt[i]["length"][j] == cleantxt[i]["labels"][k]:
+                cleantxt[i]["length"][j] = cleantxt[i]["labels"][k+1]
+                break
+for i in range(p, q):
+    for j in range(p, q):
+        itemp1 = []
+        itemp2 = []
+        itemp3 = []
+        jtemp1 = []
+        jtemp2 = []
+        jtemp3 = []
+        itemp1.append(cleantxt[i]["length"][0])
+        itemp1.append(cleantxt[i]["length"][1])
+        itemp1.append(cleantxt[i]["length"][2])
+        itemp2.append(cleantxt[i]["length"][3])
+        itemp2.append(cleantxt[i]["length"][4])
+        itemp2.append(cleantxt[i]["length"][5])
+        itemp3.append(cleantxt[i]["length"][6])
+        itemp3.append(cleantxt[i]["length"][7])
+        itemp3.append(cleantxt[i]["length"][8])
+        jtemp1.append(cleantxt[j]["length"][0])
+        jtemp1.append(cleantxt[j]["length"][1])
+        jtemp1.append(cleantxt[j]["length"][2])
+        jtemp2.append(cleantxt[j]["length"][3])
+        jtemp2.append(cleantxt[j]["length"][4])
+        jtemp2.append(cleantxt[j]["length"][5])
+        jtemp3.append(cleantxt[j]["length"][6])
+        jtemp3.append(cleantxt[j]["length"][7])
+        jtemp3.append(cleantxt[j]["length"][8])
+        if i < j and (operator.eq(itemp1, jtemp1) and operator.eq(itemp2, jtemp2) and operator.eq(itemp3, jtemp3)):
+            #print(i, j)
+            alltxt[j]["flag"] = False
+        elif i < j and (operator.eq(itemp1, jtemp1) and operator.eq(itemp2, jtemp3) and operator.eq(itemp3, jtemp2)):
+            ##print("**")
+            alltxt[j]["flag"] = False
+        elif i < j and (operator.eq(itemp1, jtemp2) and operator.eq(itemp2, jtemp1) and operator.eq(itemp3, jtemp3)):
+            #print(i, j)
+            #print("***")
+            alltxt[j]["flag"] = False
+        elif i < j and (operator.eq(itemp1, jtemp2) and operator.eq(itemp2, jtemp3) and operator.eq(itemp3, jtemp1)):
+            #print(i, j)
+            #print("****")
+            alltxt[j]["flag"] = False
+        elif i < j and (operator.eq(itemp1, jtemp3) and operator.eq(itemp2, jtemp1) and operator.eq(itemp3, jtemp2)):
+            #print(i, j)
+            alltxt[j]["flag"] = False
+            #print("*****")
+        elif i < j and (operator.eq(itemp1, jtemp3) and operator.eq(itemp2, jtemp2) and operator.eq(itemp3, jtemp1)):
+           # print(i, j)
+           # print("******")
+            alltxt[j]["flag"] = False
+
+#for i in alltxt:
+  #  print(alltxt.index(i),i)
+textName = "data.txt"
+f = open('data.txt', 'w')
+for i in alltxt:
+    if i["flag"]:
+        string = 'isDirected: true, allowsSelfLoops: false, nodes: ['
+        for j in range(len(i["nodes"])-1):
+            string = string+i["nodes"][j]+', '
+
+        string = string+i["nodes"][len(i["nodes"])-1]+'], edges: {<'
+        if i["length"].__len__()==3:
+            string = string+i["length"][0]+' -> '+i["length"][1]+'>='+i["length"][2]+'}'
+        elif i["length"].__len__()==6:
+            string = string + i["length"][0] + ' -> ' + i["length"][1] + '>=' + i["length"][2] + ', <'+i["length"][3]+' -> '+i["length"][4]+'>='+i["length"][5]+'}'
+        elif i["length"].__len__() == 9:
+            string = string + i["length"][0] + ' -> ' + i["length"][1] + '>=' + i["length"][2] + ', <' + i["length"][
+                3] + ' -> ' + i["length"][4] + '>=' + i["length"][5] + ', <' + i["length"][
+                6] + ' -> ' + i["length"][7] + '>=' + i["length"][8] + '}'
+        if i["labels"].__len__() == 4:
+            string = string + '  {'+i["labels"][0]+'='+i["labels"][1]+', '+i["labels"][2]+'='+i["labels"][3]+'}'
+        elif i["labels"].__len__() == 6:
+            string = string + '  {' + i["labels"][0] + '=' + i["labels"][1] + ', ' + i["labels"][2] + '=' + i["labels"][
+                3] + ', ' + i["labels"][4] + '=' + i["labels"][
+                5] +'}'
+        elif i["labels"].__len__() == 8:
+            string = string + '  {' + i["labels"][0] + '=' + i["labels"][1] + ', ' + i["labels"][2] + '=' + i["labels"][
+                3] + ', ' + i["labels"][4] + '=' + i["labels"][
+                5] +', ' + i["labels"][6] + '=' + i["labels"][
+                7] +'}'
+        print(alltxt.index(i), string+'\n')
+        f.write(string+'\n')
+#print(alltxt)
+#print(text)
